@@ -39,6 +39,7 @@ There's no options for this plugin.
 
 - [textlint](https://github.com/textlint/textlint)
 - [textlint-rule-no-doubled-joshi](https://github.com/azu/textlint-rule-no-doubled-joshi): this plugin is based on it
+- [textlint-rule-no-start-duplicated-conjunction](https://github.com/azu/textlint-rule-no-start-duplicated-conjunction): similar plugin, but it doesn't use part-of-speech but spliting with pointing(comma).
 
 ## License
 

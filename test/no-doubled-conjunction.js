@@ -5,7 +5,8 @@ tester.run("no-doubled-conjunction", rule, {
     valid: [
         "朝起きた。そして、夜に寝た。",
         "そして朝起きた。けれど昼は仕事をした。そして夜に寝た。",
-        "``" // empty Paragraph
+        "``", // empty Paragraph,
+        "![](path/to/image.png)"// empty image label
     ],
     invalid: [
       {

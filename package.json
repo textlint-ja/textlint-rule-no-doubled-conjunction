@@ -39,10 +39,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/takahashim/textlint-rule-no-doubled-conjunction.git"
+    "url": "https://github.com/textlint-ja/textlint-rule-no-doubled-conjunction.git"
   },
   "bugs": {
-    "url": "https://github.com/takahashim/textlint-rule-no-doubled-conjunction/issues"
+    "url": "https://github.com/textlint-ja/textlint-rule-no-doubled-conjunction/issues"
   },
-  "homepage": "https://github.com/takahashim/textlint-rule-no-doubled-conjunction"
+  "homepage": "https://github.com/textlint-ja/textlint-rule-no-doubled-conjunction"
 }

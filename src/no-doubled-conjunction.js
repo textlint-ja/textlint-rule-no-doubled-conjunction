@@ -25,7 +25,7 @@ export default function (context, options = {}) {
             const text = source.toString();
             const isSentenceNode = (node) => node.type === SentenceSyntax.Sentence;
             let sentences = splitSentences(text, {
-                charRegExp: /[。\?\!？！]/
+                charRegExp: /[.．。\?\!？！]/
             }).filter(isSentenceNode);
             // if not have a sentence, early return
             // It is for avoiding error of emptyArray.reduce().

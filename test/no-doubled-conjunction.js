@@ -41,7 +41,18 @@ tester.run("no-doubled-conjunction", rule, {
                   column: 53
               }
           ]
-      }
+      },
+      {
+        text: "かな漢字変換により漢字が多用される傾向がある．しかし漢字の多用が読みにくさをもたらす側面は否定できない.しかし、平仮名が多い文は間延びした印象を与える恐れもある。",
+        errors: [
+            {
+                message: `同じ接続詞が連続して使われています。`,
+                // last match
+                line: 1,
+                column: 53
+            }
+        ]
+      }   
 
     ]
 });

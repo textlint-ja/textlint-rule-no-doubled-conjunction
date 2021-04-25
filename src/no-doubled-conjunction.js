@@ -58,6 +58,7 @@ export default function (context, options = {}) {
                     }
                     if (current_tokens.length > 0) {
                         if (token && current_tokens[0].surface_form === token.surface_form) {
+                            const conjunctionSurface = token.surface_form;
                             const originalIndex = source.originalIndexFromPosition({
                                 line: sentence.loc.start.line,
                                 column: sentence.loc.start.column + (current_tokens[0].word_position - 1)
@@ -66,7 +67,7 @@ export default function (context, options = {}) {
                             const padding = {
                                 index: originalIndex
                             };
-                            report(node, new RuleError(`同じ接続詞が連続して使われています。`, padding));
+                            report(node, new RuleError(`同じ接続詞（${conjunctionSurface}）が連続して使われています。`, padding));
                         }
                     }
                     prev_token = token;

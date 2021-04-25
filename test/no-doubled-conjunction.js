@@ -51,6 +51,20 @@ tester.run("no-doubled-conjunction", rule, {
                     index: 53
                 }
             ]
-        }
+        },
+        {
+            text: `1行目。
+
+そして朝起きた。昼は仕事をした。そして夜に寝た。
+
+5行目。`,
+            errors: [
+                {
+                    message: `同じ接続詞（そして）が連続して使われています。`,
+                    line: 3,
+                    column: 17
+                }
+            ]
+        },
     ]
 });

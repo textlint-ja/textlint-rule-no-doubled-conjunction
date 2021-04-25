@@ -3,10 +3,10 @@
   "version": "2.0.0",
   "description": "textlint rule plugin to check duplicated conjunctions.",
   "main": "lib/no-doubled-conjunction.js",
-  "directories": {
-    "example": "example",
-    "test": "test"
-  },
+  "files": [
+    "lib",
+    "src"
+  ],
   "dependencies": {
     "kuromojin": "^3.0.0",
     "sentence-splitter": "^3.2.1",

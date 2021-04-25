@@ -24,8 +24,18 @@ export default function (context, options = {}) {
             const source = new StringSource(node);
             const text = source.toString();
             const isSentenceNode = (node) => node.type === SentenceSyntax.Sentence;
-            let sentences = splitSentences(text, {
-                charRegExp: /[。\?\!？！]/
+            const sentences = splitSentences(text, {
+                SeparatorParser: {
+                    separatorCharacters: [
+                        ".", // period
+                        "．", // (ja) zenkaku-period
+                        "。", // (ja) 句点
+                        "?", // question mark
+                        "!", //  exclamation mark
+                        "？", // (ja) zenkaku question mark
+                        "！" // (ja) zenkaku exclamation mark
+                    ]
+                }
             }).filter(isSentenceNode);
             // if not have a sentence, early return
             // It is for avoiding error of emptyArray.reduce().

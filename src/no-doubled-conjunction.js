@@ -44,7 +44,10 @@ export default function (context, options = {}) {
             }
             return getTokenizer().then(tokenizer => {
                 const selectConjenction = (sentence) => {
-                    const tokens = tokenizer.tokenizeForSentence(sentence.raw);
+                    // Remove half-width spaces beforehand when the sentence includes them, 
+                    // since particles could be misjudged as conjunctions.
+                    const whitespaceRemovedSentence = sentence.raw.replace(" ", "")
+                    const tokens = tokenizer.tokenizeForSentence(whitespaceRemovedSentence);
                     const conjunctionTokens = tokens.filter((token) => token.pos === "接続詞");
                     return [sentence, conjunctionTokens];
                 };

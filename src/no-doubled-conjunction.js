@@ -15,7 +15,7 @@ import { StringSource } from "textlint-util-to-string";
  */
 export default function (context, options = {}) {
     const helper = new RuleHelper(context);
-    const { Syntax, report, getSource, RuleError } = context;
+    const { Syntax, report, RuleError } = context;
     return {
         [Syntax.Paragraph](node) {
             if (helper.isChildNode(node, [Syntax.Link, Syntax.Image, Syntax.BlockQuote, Syntax.Emphasis])) {
@@ -45,7 +45,15 @@ export default function (context, options = {}) {
             return getTokenizer().then(tokenizer => {
                 const selectConjenction = (sentence) => {
                     const tokens = tokenizer.tokenizeForSentence(sentence.raw);
-                    const conjunctionTokens = tokens.filter((token) => token.pos === "接続詞");
+                    const conjunctionTokens = tokens.filter((token, index) => {
+                        const prevToken = tokens[index - 1];
+                        // スペースが切れ目として認識されてしまう問題を回避
+                        // https://github.com/textlint-ja/textlint-rule-no-doubled-conjunction/issues/14
+                        if (prevToken && prevToken.pos_detail_1 === "空白" && token.pos === "接続詞") {
+                            return false;
+                        }
+                        return token.pos === "接続詞"
+                    });
                     return [sentence, conjunctionTokens];
                 };
                 let prev_token = null;

@@ -7,7 +7,8 @@ tester.run("no-doubled-conjunction", rule, {
         "朝起きた。そして、夜に寝た。",
         "そして朝起きた。けれど昼は仕事をした。そして夜に寝た。",
         "``", // empty Paragraph,
-        "![](path/to/image.png)"// empty image label
+        "![](path/to/image.png)", // empty image label,
+        "AはB で開発されています。\nAはB で開発されていますが、Cです。"
     ],
     invalid: [
         {
@@ -73,6 +74,17 @@ tester.run("no-doubled-conjunction", rule, {
                     message: `同じ接続詞（そして）が連続して使われています。`,
                     line: 3,
                     column: 17
+                }
+            ]
+        },
+        {
+            text: "朝起きた。そして 昼は仕事をした。そして 夜に寝た",
+            errors: [
+                {
+                    message: `同じ接続詞（そして）が連続して使われています。`,
+                    // last match
+                    line: 1,
+                    column: 18
                 }
             ]
         },

@@ -5,20 +5,6 @@ import { tokenize } from "kuromojin";
 import { split as splitSentences, Syntax as SentenceSyntax } from "sentence-splitter";
 import { StringSource } from "textlint-util-to-string";
 
-async function selectConjenction(sentence) {
-    const tokens = await tokenize(sentence.raw);
-    const conjunctionTokens = tokens.filter((token, index) => {
-        const prevToken = tokens[index - 1];
-        // スペースが切れ目として認識されてしまう問題を回避
-        // https://github.com/textlint-ja/textlint-rule-no-doubled-conjunction/issues/14
-        if (prevToken && prevToken.pos_detail_1 === "空白" && token.pos === "接続詞") {
-            return false;
-        }
-        return token.pos === "接続詞"
-    });
-    return [sentence, conjunctionTokens];
-}
-
 /*
     1. Paragraph Node -> text
     2. text -> sentences
@@ -56,7 +42,21 @@ export default function (context, options = {}) {
             if (sentences.length === 0) {
                 return;
             }
-            return Promise.all(sentences.map(selectConjenction)).reduce((prev, current) => {
+            const selectConjenction = async (sentence) => {
+                const tokens = await tokenize(sentence.raw);
+                const conjunctionTokens = tokens.filter((token, index) => {
+                    const prevToken = tokens[index - 1];
+                    // スペースが切れ目として認識されてしまう問題を回避
+                    // https://github.com/textlint-ja/textlint-rule-no-doubled-conjunction/issues/14
+                    if (prevToken && prevToken.pos_detail_1 === "空白" && token.pos === "接続詞") {
+                        return false;
+                    }
+                    return token.pos === "接続詞"
+                });
+                return [sentence, conjunctionTokens];
+            }
+            let prev_token = null;
+            return Promise.all(sentences.map(selectConjenction)).then((result) => result.reduce((prev, current) => {
                 const [sentence, current_tokens] = current;
                 const [prev_sentence, prev_tokens] = prev;
                 let token = prev_token;
@@ -79,7 +79,7 @@ export default function (context, options = {}) {
                 }
                 prev_token = token;
                 return current;
-            });
+            }));
         }
     }
 };

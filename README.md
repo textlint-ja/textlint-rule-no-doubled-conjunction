@@ -25,6 +25,18 @@ In this example, "**しかし**" are used sequentially.
 
 ## Usage
 
+Via `.textlintrc`(Recommended)
+
+```json
+{
+  "rules": {
+    "no-doubled-conjunction": true
+  }
+}
+```
+
+Via CLI
+
     textlint --rule no-doubled-conjunction sample.md
 
 ### Options

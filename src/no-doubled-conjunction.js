@@ -2,8 +2,7 @@
 "use strict";
 import { RuleHelper } from "textlint-rule-helper";
 import { tokenize } from "kuromojin";
-import { split as splitSentences, Syntax as SentenceSyntax } from "sentence-splitter";
-import { StringSource } from "textlint-util-to-string";
+import { splitAST, SentenceSplitterSyntax as SentenceSyntax } from "sentence-splitter";
 
 /*
     1. Paragraph Node -> text
@@ -13,18 +12,21 @@ import { StringSource } from "textlint-util-to-string";
 
     TODO: need abstraction
  */
+/**
+ * @param {import("@textlint/types").TextlintRuleContext}context
+ * @param {*} options
+ * @returns {import("@textlint/types").TextlintRuleReporter}
+ */
 export default function (context, options = {}) {
     const helper = new RuleHelper(context);
-    const { Syntax, report, RuleError } = context;
+    const { Syntax, report, RuleError, locator } = context;
     return {
-        [Syntax.Paragraph](node) {
+        async [Syntax.Paragraph](node) {
             if (helper.isChildNode(node, [Syntax.Link, Syntax.Image, Syntax.BlockQuote, Syntax.Emphasis])) {
                 return;
             }
-            const source = new StringSource(node);
-            const text = source.toString();
             const isSentenceNode = (node) => node.type === SentenceSyntax.Sentence;
-            const sentences = splitSentences(text, {
+            const sentences = splitAST(node, {
                 SeparatorParser: {
                     separatorCharacters: [
                         ".", // period
@@ -36,7 +38,7 @@ export default function (context, options = {}) {
                         "！" // (ja) zenkaku exclamation mark
                     ]
                 }
-            }).filter(isSentenceNode);
+            }).children.filter(isSentenceNode)
             // if not have a sentence, early return
             // It is for avoiding error of emptyArray.reduce().
             if (sentences.length === 0) {
@@ -56,7 +58,8 @@ export default function (context, options = {}) {
                 return [sentence, conjunctionTokens];
             }
             let prev_token = null;
-            return Promise.all(sentences.map(selectConjenction)).then((result) => result.reduce((prev, current) => {
+            const result = await Promise.all(sentences.map(selectConjenction));
+            result.reduce(((prev, current) => {
                 const [sentence, current_tokens] = current;
                 const [prev_sentence, prev_tokens] = prev;
                 let token = prev_token;
@@ -66,15 +69,14 @@ export default function (context, options = {}) {
                 if (current_tokens.length > 0) {
                     if (token && current_tokens[0].surface_form === token.surface_form) {
                         const conjunctionSurface = token.surface_form;
-                        const originalIndex = source.originalIndexFromPosition({
-                            line: sentence.loc.start.line,
-                            column: sentence.loc.start.column + (current_tokens[0].word_position - 1)
-                        });
                         // padding position
-                        const padding = {
-                            index: originalIndex
-                        };
-                        report(node, new RuleError(`同じ接続詞（${conjunctionSurface}）が連続して使われています。`, padding));
+                        report(sentence,
+                            new RuleError(`同じ接続詞（${conjunctionSurface}）が連続して使われています。`, {
+                                padding: locator.range([
+                                    token.word_position - 1,
+                                    token.word_position + conjunctionSurface.length - 1
+                                ])
+                            }));
                     }
                 }
                 prev_token = token;

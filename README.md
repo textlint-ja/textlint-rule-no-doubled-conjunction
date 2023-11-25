@@ -20,11 +20,6 @@
 
     npm install textlint-rule-no-doubled-conjunction
 
-### Dependencies
-
-- [azu/kuromojin](https://github.com/azu/kuromojin): a wrapper of [kuromoji.js](https://github.com/takuyaa/kuromoji.js "kuromoji.js")
-- [azu/sentence-splitter](https://github.com/azu/sentence-splitter)
-
 ## Usage
 
 Via `.textlintrc`(Recommended)

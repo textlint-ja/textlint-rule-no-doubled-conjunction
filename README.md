@@ -1,8 +1,7 @@
 # textlint-rule-no-doubled-conjunction
 
-This module is a textlint plugin to check duplicated same conjunctions.
-
-同じ接続詞が連続して出現していないかどうかをチェックするための[textlint](https://github.com/textlint/textlint "textlint")ルールです。
+「しかし、〜。しかし、〜」のように同じ接続詞が連続すると、文章が読みにくくなります。
+同じ接続詞が連続して書かれていないかをチェックするための[textlint](https://github.com/textlint/textlint "textlint")ルールです。
 
 ex)
 
@@ -24,6 +23,18 @@ In this example, "**しかし**" are used sequentially.
 - [azu/sentence-splitter](https://github.com/azu/sentence-splitter)
 
 ## Usage
+
+Via `.textlintrc`(Recommended)
+
+```json
+{
+  "rules": {
+    "no-doubled-conjunction": true
+  }
+}
+```
+
+Via CLI
 
     textlint --rule no-doubled-conjunction sample.md
 

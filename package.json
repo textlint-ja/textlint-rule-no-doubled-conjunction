@@ -1,6 +1,6 @@
 {
   "name": "textlint-rule-no-doubled-conjunction",
-  "version": "2.0.4",
+  "version": "3.0.0",
   "description": "textlint rule plugin to check duplicated conjunctions.",
   "main": "lib/no-doubled-conjunction.js",
   "files": [

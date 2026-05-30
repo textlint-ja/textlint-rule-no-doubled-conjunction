@@ -102,5 +102,16 @@ tester.run("no-doubled-conjunction", rule, {
                 }
             ]
         },
+        {
+            // preceding conjunction is mid-sentence (after a comma), not at the head
+            text: "天気はとても良くて、また気温も快適です。空はあおいです。また、風も心地よいです。",
+            errors: [
+                {
+                    message: `同じ接続詞（また）が連続して使われています。`,
+                    // last match
+                    range: [28, 30]
+                }
+            ]
+        },
     ]
 });

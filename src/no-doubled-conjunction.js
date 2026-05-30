@@ -68,13 +68,15 @@ export default function (context, options = {}) {
                 }
                 if (current_tokens.length > 0) {
                     if (token && current_tokens[0].surface_form === token.surface_form) {
-                        const conjunctionSurface = token.surface_form;
+                        // report() targets the current `sentence`, so base the padding on its
+                        // own conjunction; `token` is the previous sentence's and mis-offsets.
+                        const conjunctionSurface = current_tokens[0].surface_form;
                         // padding position
                         report(sentence,
                             new RuleError(`同じ接続詞（${conjunctionSurface}）が連続して使われています。`, {
                                 padding: locator.range([
-                                    token.word_position - 1,
-                                    token.word_position + conjunctionSurface.length - 1
+                                    current_tokens[0].word_position - 1,
+                                    current_tokens[0].word_position + conjunctionSurface.length - 1
                                 ])
                             }));
                     }
